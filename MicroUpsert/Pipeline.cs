@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Data;
 
 namespace MicroUpsert
@@ -12,11 +11,7 @@ namespace MicroUpsert
         public abstract void GoAndRead(Action<IDataReader> readCallback);
     }
 
-
-    // todo: BufferingWindowPipeline
     // todo: DbDataExecutionPipeline
-    // todo: ListeningPipeline
-    // todo: DevNullPipeline
 
     // todo: SqlServerBuilder
 }

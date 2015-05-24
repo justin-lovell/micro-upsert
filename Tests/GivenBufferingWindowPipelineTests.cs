@@ -73,6 +73,41 @@ namespace MicroUpsert
         }
 
         [Test]
+        public void WhenMultipleCommandsButDifferentIdentitiesItShouldNotHaveMergedIntoOneCommand()
+        {
+            var keyIdentity1 = KeyIdentity.On("Test", UpsertVector.WithValue("Id", 12));
+            var keyIdentity2 = KeyIdentity.On("Test", UpsertVector.WithValue("Id", 1));
+
+            var column1 = UpsertVector.WithValue("Hello", "World");
+            var column2 = UpsertVector.WithValue("Another", "World");
+
+            // arrange
+            var nextPipeline = new ListeningPipeline();
+            var bufferingPipeline = new BufferingWindowPipeline(nextPipeline);
+
+            // act
+            bufferingPipeline.Upsert(keyIdentity1, UpsertCommand.On(column1));
+            bufferingPipeline.Upsert(keyIdentity2, UpsertCommand.On(column2));
+            bufferingPipeline.Go();
+
+            // assert
+            Assert.That(nextPipeline.UpsertVectors, Has.Count.EqualTo(2));
+
+            var upsert = nextPipeline.UpsertVectors[0];
+
+            Assert.That(upsert.Item1, Is.EqualTo(keyIdentity1));
+            Assert.That(upsert.Item2.Values, Has.Count.EqualTo(1));
+            Assert.That(upsert.Item2.Values, Has.Member(column1));
+
+
+            upsert = nextPipeline.UpsertVectors[1];
+
+            Assert.That(upsert.Item1, Is.EqualTo(keyIdentity2));
+            Assert.That(upsert.Item2.Values, Has.Count.EqualTo(1));
+            Assert.That(upsert.Item2.Values, Has.Member(column2));
+        }
+
+        [Test]
         public void WhenMultipleCommandsAreBetweenCallProcedureItShouldNotHaveMergedIntoOneCommand()
         {
             var keyIdentity = KeyIdentity.On("Test", UpsertVector.WithValue("Id", 12));
