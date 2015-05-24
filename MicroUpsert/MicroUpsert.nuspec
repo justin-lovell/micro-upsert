@@ -9,7 +9,7 @@
     <licenseUrl>https://github.com/justin-lovell/micro-upsert/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/justin-lovell/micro-upsert</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Aggregate upsert statements to a destination database via commands.</description>
+    <description>Aggregate upsert statements to a destination database via command.</description>
     <copyright>Copyright 2015 Justin Lovell</copyright>
   </metadata>
 </package>
