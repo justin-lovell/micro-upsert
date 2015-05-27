@@ -88,6 +88,11 @@ namespace MicroUpsert
                     command.Connection = connection;
                     command.CommandText = _bufferWriter.ToString();
 
+                    foreach (var parameter in _valueToParameterDictionary.Values)
+                    {
+                        command.Parameters.Add(parameter);
+                    }
+
                     connection.Open();
                     commandCallback(command);
                 }

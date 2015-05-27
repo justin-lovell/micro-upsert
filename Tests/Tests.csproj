@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="GivenBufferingWindowUpsertWriterTests.cs" />
     <Compile Include="GivenListeningWriterTests.cs" />
+    <Compile Include="GivenSqlServerDbTests.cs" />
     <Compile Include="ListeningUpsertWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

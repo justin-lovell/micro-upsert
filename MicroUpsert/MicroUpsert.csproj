@@ -44,6 +44,7 @@
     <Compile Include="DbCommandController.cs" />
     <Compile Include="DbUpsertWriter.cs" />
     <Compile Include="IDbSyntaxDriver.cs" />
+    <Compile Include="SqlServerDbSyntaxDriver.cs" />
     <Compile Include="UpsertVector.cs" />
     <Compile Include="UpsertValue.cs" />
     <Compile Include="UpsertWriter.cs" />
