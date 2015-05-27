@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace MicroUpsert
 {
     [TestFixture]
-    public class GivenBufferingWindowPipelineTests
+    public class GivenBufferingWindowUpsertWriterTests
     {
         [Test]
         public void WhenMultipleCommandsOnTheSameIdentityOnSameGoItShouldMergedIntoOneCommand()

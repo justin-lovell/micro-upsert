@@ -48,8 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GivenBufferingWindowPipelineTests.cs" />
-    <Compile Include="GivenListeningPipelineTests.cs" />
+    <Compile Include="GivenBufferingWindowUpsertWriterTests.cs" />
+    <Compile Include="GivenListeningWriterTests.cs" />
     <Compile Include="ListeningUpsertWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

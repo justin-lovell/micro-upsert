@@ -1,19 +1,25 @@
-﻿namespace MicroUpsert
+﻿using System.Data;
+
+namespace MicroUpsert
 {
-    public class ProcedureParameter
+    public sealed class ProcedureParameter
     {
-//        public ProcedureParameter(string parameterName, ParameterValue value)
-//        {
-//            ParameterName = parameterName;
-//            Value = value;
-//        }
-//
-//        public ProcedureParameter(string parameterName, object value)
-//            : this(parameterName, ParameterValue.Static(value))
-//        {
-//        }
-//
-//        public string ParameterName { get; private set; }
-//        public ParameterValue Value { get; private set; }
+        public ProcedureParameter(string parameterName, DbType dbType, object value)
+        {
+            ParameterName = parameterName;
+            DbType = dbType;
+            Value = value;
+        }
+
+        public string ParameterName { get; private set; }
+        public DbType DbType { get; private set; }
+        public object Value { get; private set; }
+        public ParameterDirection Direction { get; set; }
+
+        public ProcedureParameter WithDirection(ParameterDirection direction)
+        {
+            Direction = direction;
+            return this;
+        }
     }
 }
