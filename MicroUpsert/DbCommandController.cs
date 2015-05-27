@@ -3,9 +3,9 @@ using System.IO;
 
 namespace MicroUpsert
 {
-    public class DbSyntaxOutput
+    public class DbCommandController
     {
-        public DbSyntaxOutput(
+        public DbCommandController(
             TextWriter bufferWriter,
             Func<StaticUpsertValue, string> insertParameter)
         {

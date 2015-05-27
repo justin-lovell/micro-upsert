@@ -14,12 +14,5 @@ namespace MicroUpsert
         public string ParameterName { get; private set; }
         public DbType DbType { get; private set; }
         public object Value { get; private set; }
-        public ParameterDirection Direction { get; set; }
-
-        public ProcedureParameter WithDirection(ParameterDirection direction)
-        {
-            Direction = direction;
-            return this;
-        }
     }
 }

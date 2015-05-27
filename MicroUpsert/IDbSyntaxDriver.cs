@@ -1,10 +1,30 @@
+using System.Globalization;
+
 namespace MicroUpsert
 {
     public interface IDbSyntaxDriver
     {
-        void DoUpsert(DbSyntaxOutput dbSyntaxOutput, KeyIdentity identity, UpsertCommand command);
-        void DoProcedure(DbSyntaxOutput dbSyntaxOutput, CallProcedure details);
+        void DoUpsert(DbCommandController dbCommandController, KeyIdentity identity, UpsertCommand command);
+        void DoProcedure(DbCommandController dbCommandController, CallProcedure details);
         string GenerateParameterName(int count);
+    }
+
+    public class SqlServerDbSyntaxDriver : IDbSyntaxDriver
+    {
+        public void DoUpsert(DbCommandController dbCommandController, KeyIdentity identity, UpsertCommand command)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void DoProcedure(DbCommandController dbCommandController, CallProcedure details)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GenerateParameterName(int count)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "@p{0}", count);
+        }
     }
 
 
