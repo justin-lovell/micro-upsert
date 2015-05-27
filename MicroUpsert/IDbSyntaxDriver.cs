@@ -4,6 +4,7 @@ namespace MicroUpsert
     {
         void DoUpsert(DbSyntaxOutput dbSyntaxOutput, KeyIdentity identity, UpsertCommand command);
         void DoProcedure(DbSyntaxOutput dbSyntaxOutput, CallProcedure details);
+        string GenerateParameterName(int count);
     }
 
 

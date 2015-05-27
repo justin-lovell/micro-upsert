@@ -7,16 +7,13 @@ namespace MicroUpsert
     {
         public DbSyntaxOutput(
             TextWriter bufferWriter,
-            Func<string> generateUniqueParameterName,
-            Action<string, StaticUpsertValue> insertParameter)
+            Func<StaticUpsertValue, string> insertParameter)
         {
             BufferWriter = bufferWriter;
-            GenerateUniqueParameterName = generateUniqueParameterName;
             InsertParameter = insertParameter;
         }
 
         public TextWriter BufferWriter { get; private set; }
-        public Func<string> GenerateUniqueParameterName { get; private set; }
-        public Action<string, StaticUpsertValue> InsertParameter { get; private set; }
+        public Func<StaticUpsertValue, string> InsertParameter { get; private set; }
     }
 }

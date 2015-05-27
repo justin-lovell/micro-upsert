@@ -17,9 +17,9 @@ namespace MicroUpsert
             new Dictionary<StaticUpsertValue, DbParameter>();
 
         public DbUpsertWriter(
-            string connectionString,
             DbProviderFactory providerFactory,
-            IDbSyntaxDriver dbSyntaxDriver)
+            IDbSyntaxDriver dbSyntaxDriver,
+            string connectionString)
         {
             _connectionString = connectionString;
             _providerFactory = providerFactory;
@@ -54,24 +54,26 @@ namespace MicroUpsert
 
         private DbSyntaxOutput CreateDbSyntaxOutput()
         {
-            Func<string> generateUniqueParameterName = () => "p" + _valueToParameterDictionary.Count;
-            Action<string, StaticUpsertValue> insertParameter =
-                (parameterName, value) =>
+            Func<StaticUpsertValue, string> injectParameter =
+                (value) =>
                 {
-                    if (_valueToParameterDictionary.ContainsKey(value))
+                    DbParameter parameter;
+                    if (_valueToParameterDictionary.TryGetValue(value, out parameter))
                     {
-                        return;
+                        return parameter.ParameterName;
                     }
 
                     var dbParam = _providerFactory.CreateParameter();
 
-                    dbParam.ParameterName = parameterName;
+                    dbParam.ParameterName =
+                        _dbSyntaxDriver.GenerateParameterName(_valueToParameterDictionary.Count);
                     dbParam.Value = value.Value;
 
                     _valueToParameterDictionary.Add(value, dbParam);
-                };
 
-            var dbSyntaxOutput = new DbSyntaxOutput(_bufferWriter, generateUniqueParameterName, insertParameter);
+                    return dbParam.ParameterName;
+                };
+            var dbSyntaxOutput = new DbSyntaxOutput(_bufferWriter, injectParameter);
             return dbSyntaxOutput;
         }
 
