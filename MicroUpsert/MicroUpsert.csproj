@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="BufferingWindowUpsertWriter.cs" />
     <Compile Include="CallProcedure.cs" />
-    <Compile Include="DbSyntaxOutput.cs" />
+    <Compile Include="DbCommandController.cs" />
     <Compile Include="DbUpsertWriter.cs" />
     <Compile Include="IDbSyntaxDriver.cs" />
     <Compile Include="UpsertVector.cs" />
