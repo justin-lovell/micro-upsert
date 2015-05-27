@@ -4,9 +4,9 @@ using System.Data;
 
 namespace MicroUpsert
 {
-    public class ListeningPipeline : Pipeline
+    public class ListeningUpsertWriter : UpsertWriter
     {
-        public ListeningPipeline()
+        public ListeningUpsertWriter()
         {
             UpsertVectors = new List<Tuple<KeyIdentity, UpsertCommand>>();
             Procedures = new List<CallProcedure>();

@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="GivenBufferingWindowPipelineTests.cs" />
     <Compile Include="GivenListeningPipelineTests.cs" />
-    <Compile Include="ListeningPipeline.cs" />
+    <Compile Include="ListeningUpsertWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

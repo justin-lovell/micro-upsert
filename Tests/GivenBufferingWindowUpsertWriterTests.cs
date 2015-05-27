@@ -15,8 +15,8 @@ namespace MicroUpsert
             var column2 = UpsertVector.WithValue("Another", "World");
 
             // arrange
-            var nextPipeline = new ListeningPipeline();
-            var bufferingPipeline = new BufferingWindowPipeline(nextPipeline);
+            var nextPipeline = new ListeningUpsertWriter();
+            var bufferingPipeline = new BufferingWindowUpsertWriter(nextPipeline);
 
             // act
 
@@ -45,8 +45,8 @@ namespace MicroUpsert
             var column2 = UpsertVector.WithValue("Another", "World");
 
             // arrange
-            var nextPipeline = new ListeningPipeline();
-            var bufferingPipeline = new BufferingWindowPipeline(nextPipeline);
+            var nextPipeline = new ListeningUpsertWriter();
+            var bufferingPipeline = new BufferingWindowUpsertWriter(nextPipeline);
 
             // act
 
@@ -82,8 +82,8 @@ namespace MicroUpsert
             var column2 = UpsertVector.WithValue("Another", "World");
 
             // arrange
-            var nextPipeline = new ListeningPipeline();
-            var bufferingPipeline = new BufferingWindowPipeline(nextPipeline);
+            var nextPipeline = new ListeningUpsertWriter();
+            var bufferingPipeline = new BufferingWindowUpsertWriter(nextPipeline);
 
             // act
             bufferingPipeline.Upsert(keyIdentity1, UpsertCommand.On(column1));
@@ -116,8 +116,8 @@ namespace MicroUpsert
             var column2 = UpsertVector.WithValue("Another", "World");
 
             // arrange
-            var nextPipeline = new ListeningPipeline();
-            var bufferingPipeline = new BufferingWindowPipeline(nextPipeline);
+            var nextPipeline = new ListeningUpsertWriter();
+            var bufferingPipeline = new BufferingWindowUpsertWriter(nextPipeline);
 
             // act
 
@@ -150,8 +150,8 @@ namespace MicroUpsert
         public void WhenTheGoIsCalledItShouldHavePopulatedTheNextPipeline()
         {
             // arrange
-            var nextPipeline = new ListeningPipeline();
-            var bufferingPipeline = new BufferingWindowPipeline(nextPipeline);
+            var nextPipeline = new ListeningUpsertWriter();
+            var bufferingPipeline = new BufferingWindowUpsertWriter(nextPipeline);
 
             // act
             bufferingPipeline.Upsert(KeyIdentity.On("Test", UpsertVector.WithValue("Id", 12)),
@@ -166,8 +166,8 @@ namespace MicroUpsert
         public void WhenTheGoIsNotCalledItShouldNotHavePopulatedTheNextPipeline()
         {
             // arrange
-            var nextPipeline = new ListeningPipeline();
-            var bufferingPipeline = new BufferingWindowPipeline(nextPipeline);
+            var nextPipeline = new ListeningUpsertWriter();
+            var bufferingPipeline = new BufferingWindowUpsertWriter(nextPipeline);
 
             // act
             bufferingPipeline.Upsert(KeyIdentity.On("Test", UpsertVector.WithValue("Id", 12)),

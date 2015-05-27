@@ -5,20 +5,20 @@ using System.Linq;
 
 namespace MicroUpsert
 {
-    public sealed class BufferingWindowPipeline : Pipeline
+    public sealed class BufferingWindowUpsertWriter : UpsertWriter
     {
-        private readonly Pipeline _nextPipeline;
+        private readonly UpsertWriter _nextUpsertWriter;
         private readonly Queue<WorkingSet> _workingSets = new Queue<WorkingSet>();
         private WorkingSet _currentWorkingSet;
 
-        public BufferingWindowPipeline(Pipeline nextPipeline)
+        public BufferingWindowUpsertWriter(UpsertWriter nextUpsertWriter)
         {
-            if (nextPipeline == null)
+            if (nextUpsertWriter == null)
             {
-                throw new ArgumentNullException("nextPipeline");
+                throw new ArgumentNullException("nextUpsertWriter");
             }
 
-            _nextPipeline = nextPipeline;
+            _nextUpsertWriter = nextUpsertWriter;
         }
 
         public override void Upsert(KeyIdentity identity, UpsertCommand command)
@@ -51,8 +51,8 @@ namespace MicroUpsert
             {
                 var workingSet = _workingSets.Dequeue();
 
-                workingSet.EnlistDetails(_nextPipeline);
-                _nextPipeline.Go();
+                workingSet.EnlistDetails(_nextUpsertWriter);
+                _nextUpsertWriter.Go();
             }
 
             _currentWorkingSet = null;
@@ -64,8 +64,8 @@ namespace MicroUpsert
             {
                 var workingSet = _workingSets.Dequeue();
 
-                workingSet.EnlistDetails(_nextPipeline);
-                _nextPipeline.GoAndRead(readCallback);
+                workingSet.EnlistDetails(_nextUpsertWriter);
+                _nextUpsertWriter.GoAndRead(readCallback);
             }
 
             _currentWorkingSet = null;
@@ -93,16 +93,16 @@ namespace MicroUpsert
                 _identityToUpsert[identity] = newCommand;
             }
 
-            public void EnlistDetails(Pipeline nextPipeline)
+            public void EnlistDetails(UpsertWriter nextUpsertWriter)
             {
                 foreach (var upsert in _identityToUpsert)
                 {
-                    nextPipeline.Upsert(upsert.Key, upsert.Value);
+                    nextUpsertWriter.Upsert(upsert.Key, upsert.Value);
                 }
 
                 if (ProcedureDetails != null)
                 {
-                    nextPipeline.Call(ProcedureDetails);
+                    nextUpsertWriter.Call(ProcedureDetails);
                 }
             }
         }

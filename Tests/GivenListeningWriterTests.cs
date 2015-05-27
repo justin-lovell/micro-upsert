@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace MicroUpsert
 {
     [TestFixture]
-    public class GivenListeningPipelineTests
+    public class GivenListeningWriterTests
     {
         [Test]
         public void WhenUpsertItShouldEcho()
@@ -14,7 +14,7 @@ namespace MicroUpsert
             var vector = UpsertCommand.On(columnValues);
 
             // arrange
-            var pipeline = new ListeningPipeline();
+            var pipeline = new ListeningUpsertWriter();
 
             // act
             pipeline.Upsert(identity, vector);

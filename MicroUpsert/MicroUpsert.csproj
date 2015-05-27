@@ -39,11 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BufferingWindowPipeline.cs" />
+    <Compile Include="BufferingWindowUpsertWriter.cs" />
     <Compile Include="CallProcedure.cs" />
     <Compile Include="UpsertVector.cs" />
     <Compile Include="UpsertValue.cs" />
-    <Compile Include="Pipeline.cs" />
+    <Compile Include="UpsertWriter.cs" />
     <Compile Include="ProcedureParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticUpsertValue.cs" />
