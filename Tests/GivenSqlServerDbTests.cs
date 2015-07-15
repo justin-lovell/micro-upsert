@@ -29,5 +29,13 @@ namespace MicroUpsert
 
             writer.Go();
         }
+
+        [Test]
+        public void WhenCallingGoOnEmptyCommandItShouldNotConnectToServer()
+        {
+            var writer = new DbUpsertWriter(_dbProvider, _dbSyntax, _connectionString);
+
+            writer.Go();
+        }
     }
 }

@@ -93,8 +93,11 @@ namespace MicroUpsert
                         command.Parameters.Add(parameter);
                     }
 
-                    connection.Open();
-                    commandCallback(command);
+                    if (!string.IsNullOrEmpty(command.CommandText))
+                    {
+                        connection.Open();
+                        commandCallback(command);
+                    }
                 }
             }
 
