@@ -8,22 +8,28 @@ namespace MicroUpsert
     [TestFixture]
     public class GivenSqlServerDbTests
     {
-        private DbProviderFactory _dbProvider;
+        private Func<IDbConnection> _createConnectionFactory; 
         private IDbSyntaxDriver _dbSyntax;
-        private string _connectionString;
 
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            _dbProvider = DbProviderFactories.GetFactory("System.Data.SqlClient");
+            var dbProvider = DbProviderFactories.GetFactory("System.Data.SqlClient");
+            const string connectionString = "Data Source=.;Integrated Security=True;Initial Catalog=MicroUpsertTestDb";
+
             _dbSyntax = new SqlServerDbSyntaxDriver();
-            _connectionString = "Data Source=.;Integrated Security=True;Initial Catalog=MicroUpsertTestDb";
+            _createConnectionFactory = () =>
+            {
+                var connection = dbProvider.CreateConnection();
+                connection.ConnectionString = connectionString;
+                return connection;
+            };
         }
 
         [Test]
         public void WhenUpsertItShouldSucceed()
         {
-            var writer = new DbUpsertWriter(_dbProvider, _dbSyntax, _connectionString);
+            var writer = new DbUpsertWriter(_dbSyntax, _createConnectionFactory);
 
             writer.Upsert(KeyIdentity.On("Table1", UpsertVector.WithValue("TheGuid", Guid.NewGuid())),
                           UpsertCommand.On(UpsertVector.WithValue("ColA", Guid.NewGuid())));
@@ -34,7 +40,7 @@ namespace MicroUpsert
         [Test]
         public void WhenCallingGoOnEmptyCommandItShouldNotConnectToServer()
         {
-            var writer = new DbUpsertWriter(_dbProvider, _dbSyntax, _connectionString);
+            var writer = new DbUpsertWriter(_dbSyntax, _createConnectionFactory);
 
             writer.Go();
         }
@@ -44,7 +50,7 @@ namespace MicroUpsert
         {
             string randomString = Guid.NewGuid().ToString();
 
-            var writer = new DbUpsertWriter(_dbProvider, _dbSyntax, _connectionString);
+            var writer = new DbUpsertWriter(_dbSyntax, _createConnectionFactory);
             writer.Call(CallProcedure.Create("Echo", new ProcedureParameter("@Msg", DbType.String, randomString)));
 
             bool wasResults = false;

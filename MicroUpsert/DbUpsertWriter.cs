@@ -8,22 +8,19 @@ namespace MicroUpsert
 {
     public sealed class DbUpsertWriter : UpsertWriter
     {
-        private readonly string _connectionString;
         private readonly IDbSyntaxDriver _dbSyntaxDriver;
-        private readonly DbProviderFactory _providerFactory;
+        private readonly Func<IDbConnection> _dbConnectionFactory;
         private StringWriter _bufferWriter = new StringWriter();
 
-        private Dictionary<StaticUpsertValue, DbParameter> _valueToParameterDictionary =
-            new Dictionary<StaticUpsertValue, DbParameter>();
+        private Dictionary<StaticUpsertValue, Tuple<string, object>> _valueToParameterDictionary =
+            new Dictionary<StaticUpsertValue, Tuple<string, object>>();
 
         public DbUpsertWriter(
-            DbProviderFactory providerFactory,
             IDbSyntaxDriver dbSyntaxDriver,
-            string connectionString)
+            Func<IDbConnection> dbConnectionFactory)
         {
-            _connectionString = connectionString;
-            _providerFactory = providerFactory;
             _dbSyntaxDriver = dbSyntaxDriver;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         public override void Upsert(KeyIdentity identity, UpsertCommand command)
@@ -57,40 +54,41 @@ namespace MicroUpsert
             Func<StaticUpsertValue, string> generateUpsertParameter =
                 value =>
                 {
-                    DbParameter parameter;
+                    Tuple<string, object> parameter;
                     if (_valueToParameterDictionary.TryGetValue(value, out parameter))
                     {
-                        return parameter.ParameterName;
+                        return parameter.Item1;
                     }
 
-                    var dbParam = _providerFactory.CreateParameter();
+                    string parameterName = _dbSyntaxDriver.GenerateParameterName(_valueToParameterDictionary.Count);
+                    object parameterValue = value.Value;
 
-                    dbParam.ParameterName =
-                        _dbSyntaxDriver.GenerateParameterName(_valueToParameterDictionary.Count);
-                    dbParam.Value = value.Value;
+                    var tuple = new Tuple<string, object>(parameterName, parameterValue);
 
-                    _valueToParameterDictionary.Add(value, dbParam);
+                    _valueToParameterDictionary.Add(value, tuple);
 
-                    return dbParam.ParameterName;
+                    return tuple.Item1;
                 };
-            var dbSyntaxOutput = new DbCommandController(_bufferWriter, generateUpsertParameter);
-            return dbSyntaxOutput;
+            return new DbCommandController(_bufferWriter, generateUpsertParameter);
         }
 
-        private void ExecuteDbCommand(Action<DbCommand> commandCallback)
+        private void ExecuteDbCommand(Action<IDbCommand> commandCallback)
         {
-            using (var connection = _providerFactory.CreateConnection())
+            using (var connection = _dbConnectionFactory())
             {
-                using (var command = _providerFactory.CreateCommand())
+                using (var command = connection.CreateCommand())
                 {
-                    connection.ConnectionString = _connectionString;
-
                     command.Connection = connection;
                     command.CommandText = _bufferWriter.ToString();
 
                     foreach (var parameter in _valueToParameterDictionary.Values)
                     {
-                        command.Parameters.Add(parameter);
+                        var dbDataParameter = command.CreateParameter();
+
+                        dbDataParameter.ParameterName = parameter.Item1;
+                        dbDataParameter.Value = parameter.Item2;
+
+                        command.Parameters.Add(dbDataParameter);
                     }
 
                     if (!string.IsNullOrEmpty(command.CommandText))
@@ -102,7 +100,7 @@ namespace MicroUpsert
             }
 
             _bufferWriter = new StringWriter();
-            _valueToParameterDictionary = new Dictionary<StaticUpsertValue, DbParameter>();
+            _valueToParameterDictionary = new Dictionary<StaticUpsertValue, Tuple<string, object>>();
         }
     }
 }
