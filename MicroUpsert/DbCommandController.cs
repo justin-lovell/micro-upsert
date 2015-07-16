@@ -3,17 +3,17 @@ using System.IO;
 
 namespace MicroUpsert
 {
-    public class DbCommandController
+    public sealed class DbCommandController
     {
         public DbCommandController(
             TextWriter bufferWriter,
-            Func<StaticUpsertValue, string> insertParameter)
+            Func<StaticUpsertValue, string> generateUpsertParameter)
         {
             BufferWriter = bufferWriter;
-            InsertParameter = insertParameter;
+            GenerateUpsertParameter = generateUpsertParameter;
         }
 
         public TextWriter BufferWriter { get; private set; }
-        public Func<StaticUpsertValue, string> InsertParameter { get; private set; }
+        public Func<StaticUpsertValue, string> GenerateUpsertParameter { get; private set; }
     }
 }

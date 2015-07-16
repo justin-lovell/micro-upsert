@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.Common;
 using NUnit.Framework;
 
@@ -36,6 +37,27 @@ namespace MicroUpsert
             var writer = new DbUpsertWriter(_dbProvider, _dbSyntax, _connectionString);
 
             writer.Go();
+        }
+
+        [Test]
+        public void WhenCallProcedureItShouldEchoResultBack()
+        {
+            string randomString = Guid.NewGuid().ToString();
+
+            var writer = new DbUpsertWriter(_dbProvider, _dbSyntax, _connectionString);
+            writer.Call(CallProcedure.Create("Echo", new ProcedureParameter("@Msg", DbType.String, randomString)));
+
+            bool wasResults = false;
+            string col1Result = null;
+            writer.GoAndRead(reader =>
+            {
+                wasResults = reader.Read();
+                if (wasResults)
+                    col1Result = reader[0].ToString();
+            });
+
+            Assert.That(wasResults, Is.True);
+            Assert.That(col1Result, Is.EqualTo(randomString));
         }
     }
 }

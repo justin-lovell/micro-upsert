@@ -54,8 +54,8 @@ namespace MicroUpsert
 
         private DbCommandController CreateDbSyntaxOutput()
         {
-            Func<StaticUpsertValue, string> injectParameter =
-                (value) =>
+            Func<StaticUpsertValue, string> generateUpsertParameter =
+                value =>
                 {
                     DbParameter parameter;
                     if (_valueToParameterDictionary.TryGetValue(value, out parameter))
@@ -73,7 +73,7 @@ namespace MicroUpsert
 
                     return dbParam.ParameterName;
                 };
-            var dbSyntaxOutput = new DbCommandController(_bufferWriter, injectParameter);
+            var dbSyntaxOutput = new DbCommandController(_bufferWriter, generateUpsertParameter);
             return dbSyntaxOutput;
         }
 

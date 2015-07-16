@@ -12,12 +12,12 @@ namespace MicroUpsert
             var identities =
                 identity.Identities
                         .ToDictionary(_ => _.ColumnName,
-                                      _ => controller.InsertParameter((StaticUpsertValue) _.Value)
+                                      _ => controller.GenerateUpsertParameter((StaticUpsertValue) _.Value)
                     );
             var settings =
                 command.Values
                        .ToDictionary(_ => _.ColumnName,
-                                     _ => controller.InsertParameter((StaticUpsertValue) _.Value)
+                                     _ => controller.GenerateUpsertParameter((StaticUpsertValue) _.Value)
                     );
 
             /*
@@ -59,8 +59,20 @@ namespace MicroUpsert
 
         public void DoProcedure(DbCommandController controller, CallProcedure details)
         {
-            // todo: https://support.microsoft.com/en-us/kb/262499
-            throw new NotImplementedException();
+            controller.BufferWriter.Write("exec {0}", details.ProcedureName);
+
+            string seperator = "";
+            foreach (var procedureParameter in details.Parameters)
+            {
+                var staticValue = UpsertValue.Static(procedureParameter.Value);
+                var parameter = controller.GenerateUpsertParameter((StaticUpsertValue) staticValue);
+
+                controller.BufferWriter.WriteLine(seperator);
+                controller.BufferWriter.Write("\t{0}={1}", procedureParameter.ParameterName, parameter);
+                seperator = ",";
+            }
+
+            controller.BufferWriter.WriteLine();
         }
 
         public string GenerateParameterName(int count)
