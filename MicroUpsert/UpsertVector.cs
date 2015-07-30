@@ -27,7 +27,8 @@ namespace MicroUpsert
 
         private bool Equals(UpsertVector other)
         {
-            return InvariantCultureIgnoreCase.Equals(ColumnName, other.ColumnName);
+            return InvariantCultureIgnoreCase.Equals(ColumnName, other.ColumnName)
+                   && Value.Equals(other.Value);
         }
 
         public override bool Equals(object obj)

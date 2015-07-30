@@ -33,6 +33,7 @@ namespace MicroUpsert
             var bufferingWriter = new BufferingWindowUpsertWriter(collatedWriter);
 
             _writer.PurgeToWriter(bufferingWriter);
+            bufferingWriter.Go();
 
             return new VerificationBuilderImpl(collatedWriter.UpsertVectors, collatedWriter.Procedures);
         }

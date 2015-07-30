@@ -34,11 +34,11 @@ namespace MicroUpsert
 
         public VerificationFailedException(
             string message,
-            KeyValuePair<KeyIdentity, UpsertCommand>[] unexpectedUpserts,
-            KeyValuePair<KeyIdentity, UpsertCommand>[] missingUpserts,
+            UpsertCommand[] unexpectedUpserts,
+            UpsertCommand[] missingUpserts,
             NonEqualUpsert[] nonEqualUpserts,
-            KeyValuePair<string, CallProcedure>[] unexpectedProcedures,
-            KeyValuePair<string, CallProcedure>[] missingProcedures,
+            CallProcedure[] unexpectedProcedures,
+            CallProcedure[] missingProcedures,
             NonEqualProcedure[] nonEqualProcedures)
             : this(message)
         {
@@ -50,11 +50,11 @@ namespace MicroUpsert
             NonEqualProcedures = nonEqualProcedures;
         }
 
-        public KeyValuePair<KeyIdentity, UpsertCommand>[] UnexpectedUpserts { get; private set; }
-        public KeyValuePair<KeyIdentity, UpsertCommand>[] MissingUpserts { get; private set; }
+        public UpsertCommand[] UnexpectedUpserts { get; private set; }
+        public UpsertCommand[] MissingUpserts { get; private set; }
         public NonEqualUpsert[] NonEqualUpserts { get; private set; }
-        public KeyValuePair<string, CallProcedure>[] UnexpectedProcedures { get; private set; }
-        public KeyValuePair<string, CallProcedure>[] MissingProcedures { get; private set; }
+        public CallProcedure[] UnexpectedProcedures { get; private set; }
+        public CallProcedure[] MissingProcedures { get; private set; }
         public NonEqualProcedure[] NonEqualProcedures { get; private set; }
     }
 }
