@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.IO;
 
 namespace MicroUpsert
 {
     public sealed class DbUpsertWriter : UpsertWriter
     {
-        private readonly IDbSyntaxDriver _dbSyntaxDriver;
         private readonly Func<IDbConnection> _dbConnectionFactory;
+        private readonly IDbSyntaxDriver _dbSyntaxDriver;
         private StringWriter _bufferWriter = new StringWriter();
 
         private Dictionary<StaticUpsertValue, Tuple<string, object>> _valueToParameterDictionary =
@@ -60,8 +59,8 @@ namespace MicroUpsert
                         return parameter.Item1;
                     }
 
-                    string parameterName = _dbSyntaxDriver.GenerateParameterName(_valueToParameterDictionary.Count);
-                    object parameterValue = value.Value;
+                    var parameterName = _dbSyntaxDriver.GenerateParameterName(_valueToParameterDictionary.Count);
+                    var parameterValue = value.Value;
 
                     var tuple = new Tuple<string, object>(parameterName, parameterValue);
 

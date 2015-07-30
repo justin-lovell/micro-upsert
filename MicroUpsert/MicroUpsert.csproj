@@ -44,6 +44,9 @@
     <Compile Include="DbCommandController.cs" />
     <Compile Include="DbUpsertWriter.cs" />
     <Compile Include="IDbSyntaxDriver.cs" />
+    <Compile Include="InMemoryUpsertWriter.cs" />
+    <Compile Include="IVerificationBuilder.cs" />
+    <Compile Include="NonEqualUpsert.cs" />
     <Compile Include="SqlServerDbSyntaxDriver.cs" />
     <Compile Include="UpsertVector.cs" />
     <Compile Include="UpsertValue.cs" />
@@ -53,6 +56,9 @@
     <Compile Include="StaticUpsertValue.cs" />
     <Compile Include="KeyIdentity.cs" />
     <Compile Include="UpsertCommand.cs" />
+    <Compile Include="VerificationBuilderImpl.cs" />
+    <Compile Include="VerificationFailedException.cs" />
+    <Compile Include="VerificationUpsertWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MicroUpsert.nuspec">
