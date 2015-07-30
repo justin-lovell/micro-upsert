@@ -15,8 +15,8 @@ namespace MicroUpsert
             var column2 = UpsertVector.WithValue("Another", "World");
 
             // arrange
-            var nextPipeline = new ListeningUpsertWriter();
-            var bufferingPipeline = new BufferingWindowUpsertWriter(nextPipeline);
+            var nextUpsertWriter = new VerificationUpsertWriter();
+            var bufferingPipeline = new BufferingWindowUpsertWriter(nextUpsertWriter);
 
             // act
 
@@ -25,15 +25,12 @@ namespace MicroUpsert
             bufferingPipeline.Go();
 
             // assert
-            Assert.That(nextPipeline.UpsertVectors, Has.Count.EqualTo(1));
-
-            var upsert = nextPipeline.UpsertVectors[0];
-
-            Assert.That(upsert.Item1, Is.EqualTo(keyIdentity));
-
-            Assert.That(upsert.Item2.Values, Has.Count.EqualTo(2));
-            Assert.That(upsert.Item2.Values, Has.Member(column1));
-            Assert.That(upsert.Item2.Values, Has.Member(column2));
+            nextUpsertWriter.StartVerification()
+                            .MatchUpsert(KeyIdentity.On("Test",
+                                                        UpsertVector.WithValue("Id", 12)),
+                                         UpsertCommand.On(UpsertVector.WithValue("Hello", "World"),
+                                                          UpsertVector.WithValue("Another", "World")))
+                            .Verify();
         }
 
         [Test]
@@ -82,8 +79,8 @@ namespace MicroUpsert
             var column2 = UpsertVector.WithValue("Another", "World");
 
             // arrange
-            var nextPipeline = new ListeningUpsertWriter();
-            var bufferingPipeline = new BufferingWindowUpsertWriter(nextPipeline);
+            var nextUpsertWriter = new VerificationUpsertWriter();
+            var bufferingPipeline = new BufferingWindowUpsertWriter(nextUpsertWriter);
 
             // act
             bufferingPipeline.Upsert(keyIdentity1, UpsertCommand.On(column1));
@@ -91,20 +88,15 @@ namespace MicroUpsert
             bufferingPipeline.Go();
 
             // assert
-            Assert.That(nextPipeline.UpsertVectors, Has.Count.EqualTo(2));
 
-            var upsert = nextPipeline.UpsertVectors[0];
-
-            Assert.That(upsert.Item1, Is.EqualTo(keyIdentity1));
-            Assert.That(upsert.Item2.Values, Has.Count.EqualTo(1));
-            Assert.That(upsert.Item2.Values, Has.Member(column1));
-
-
-            upsert = nextPipeline.UpsertVectors[1];
-
-            Assert.That(upsert.Item1, Is.EqualTo(keyIdentity2));
-            Assert.That(upsert.Item2.Values, Has.Count.EqualTo(1));
-            Assert.That(upsert.Item2.Values, Has.Member(column2));
+            nextUpsertWriter.StartVerification()
+                            .MatchUpsert(KeyIdentity.On("Test",
+                                                        UpsertVector.WithValue("Id", 12)),
+                                         UpsertCommand.On(UpsertVector.WithValue("Hello", "World")))
+                            .MatchUpsert(KeyIdentity.On("Test",
+                                                        UpsertVector.WithValue("Id", 1)),
+                                         UpsertCommand.On(UpsertVector.WithValue("Another", "World")))
+                            .Verify();
         }
 
         [Test]

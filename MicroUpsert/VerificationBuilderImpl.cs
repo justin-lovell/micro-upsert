@@ -106,7 +106,7 @@ namespace MicroUpsert
             }
 
             string msg = "Verification failed. View exception details for more information";
-            throw new VerificationFailedException(msg, r.UnexpectedUpserts, r.MissingUpserts, r.NonEqualUpserts);
+            throw new VerificationFailedException(msg, r.UnexpectedUpserts, r.MissingUpserts, r.NonEqualUpserts, r.UnexpectedProcedures, r.MissingProcedures, r.NonEqualProcedures);
         }
     }
 }

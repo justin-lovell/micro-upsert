@@ -46,6 +46,7 @@
     <Compile Include="IDbSyntaxDriver.cs" />
     <Compile Include="InMemoryUpsertWriter.cs" />
     <Compile Include="IVerificationBuilder.cs" />
+    <Compile Include="NonEqualProcedure.cs" />
     <Compile Include="NonEqualUpsert.cs" />
     <Compile Include="SqlServerDbSyntaxDriver.cs" />
     <Compile Include="UpsertVector.cs" />
