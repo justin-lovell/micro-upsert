@@ -54,6 +54,7 @@
     <Compile Include="GivenUpsertsItShouldBeVerified.cs" />
     <Compile Include="ListeningUpsertWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VerificationUpsertWriterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
